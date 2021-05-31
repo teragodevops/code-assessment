@@ -1,0 +1,85 @@
+:source-highlighter: highlight.js
+:highlightjs-languages: php
+
+== Code Assessment
+
+The goal here is to have you to read and critique the following code snippets.
+Don't worry about creating a write-up though — just take some personal notes — we'll discuss your feedback on a call.
+If it helps you, feel free to rewrite the samples with any changes you'd like to propose (this is entirely optional).
+
+. How might you improve the following code?
+  What would you change, if anything, and why?
+.. {blank}
++
+.Code Sample {counter:codeblock:1}
+[source,php]
+----
+function clearLineitemTemplate($type="monthly")
+{
+    global $tmpl;
+
+    switch ($type) {
+        case "onetime":
+            $tmpl->clearTemplate('row_onetime_header');
+            $tmpl->clearTemplate('row_onetime_subheader');
+            $tmpl->clearTemplate('row_onetime_data');
+            $tmpl->clearTemplate('row_onetime_data_taxes');
+            $tmpl->clearTemplate('row_onetime_footer');
+            break;
+
+        case "never":
+            $tmpl->clearTemplate('row_never_header');
+            $tmpl->clearTemplate('row_never_subheader');
+            $tmpl->clearTemplate('row_never_data');
+            $tmpl->clearTemplate('row_never_data_taxes');
+            $tmpl->clearTemplate('row_never_footer');
+            break;
+
+        case "monthly":
+        default:
+            $tmpl->clearTemplate('row_monthly_header');
+            $tmpl->clearTemplate('row_monthly_subheader');
+            $tmpl->clearTemplate('row_monthly_data');
+            $tmpl->clearTemplate('row_monthly_data_taxes');
+            $tmpl->clearTemplate('row_monthly_footer');
+            break;
+    }
+}
+----
+.. {blank}
++
+.Code Sample {counter:codeblock:1}
+[source,php]
+----
+// Assume that getTicketRolloverStat() is defined somewhere
+$result = getTicketRolloverStat();
+
+header("Pragma: public");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header('Content-type: application/ms-excel');
+header("Content-Type: application/force-download");
+header("Content-Type: application/octet-stream");
+header("Content-Type: application/download");
+header("Content-Disposition: attachment;filename=report-support-tickets-rollover.xls ");
+header("Content-Transfer-Encoding: binary ");
+
+echo "Week \t Opened \t Closed / Completed \t CarryOver \n";
+
+foreach ($result['summary'] as $summary_x) {
+    echo $summary_x['date_start'] . " -to- " . $summary_x['date_end'] . " \t ";
+    echo $summary_x['count_open'] . " \t " . $summary_x['count_closed'] . " \t " . $summary_x['count_carryover'] . " \n";
+}
+
+echo "\n\n";
+
+echo "Ticket Id \t Name \t Company \t Account Number \t Subject \t Assignee \t Severity \t Status \t Date Open \t Date Resolved \t Date Closed \n";
+
+foreach ($result['tickets'] as $ticket_x) {
+    echo $ticket_x['id'] . " \t " . $ticket_x['first_name'] . " " . $ticket_x['last_name'] . " \t " . $ticket_x['company'] . " \t ";
+    echo $ticket_x['account_number'] . " \t " . $ticket_x['subject'] . " \t " . $ticket_x['assignee'] . " \t " . $ticket_x['severity'] . " \t ";
+    echo $ticket_x['status'] . " \t ". $ticket_x['date_created'] . " \t " . $ticket_x['date_resolved'] . " \t " . $ticket_x['date_closed'] . "\n";
+}
+
+exit(0);
+----
